@@ -1,0 +1,24 @@
+
+import { useSession } from "next-auth/react";
+
+import { Press_Start_2P } from 'next/font/google'
+ 
+const ps2 = Press_Start_2P({
+  weight: '400',
+  subsets: ['latin'],
+})
+ 
+
+
+export default function Header() {
+    return (
+        <header className={`${ps2.className} pr-4 py-2 w-full text-white text-xs flex md:flex md:flex-grow space bg-stone-900 justify-between h-[10%]`}> 
+        <div className='mx-4 grid grid-rows-2 items-center justify-items-start'>
+          <h3 className=' text-lg font-semibold text-foreground text-amber-300'>Player</h3>
+          <p >Lucas</p>
+        </div>
+        <h1 className=' text-lg font-semibold text-foreground justify-items-begin text-amber-300'>Docuvision</h1>
+      </header>
+    );
+  }
+  
