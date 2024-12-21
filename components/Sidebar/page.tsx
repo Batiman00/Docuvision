@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import { signOut } from 'next-auth/react';
+import { LogOut } from 'lucide-react';
 
 export function Sidebar() {
   const router = useRouter();
@@ -46,7 +48,12 @@ export function Sidebar() {
           >
             Login
           </Button>
-
+          <Button
+            className='w-full'
+            onClick={() => { LogOut;  { router.push('/auth/login')}}}
+          >
+            LogOut
+          </Button>
           <Button
             variant='secondary'
             className='w-full'
