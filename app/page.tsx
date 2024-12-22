@@ -1,14 +1,12 @@
-import Header from "@/components/Header/page";
-import { Sidebar } from "@/components/Sidebar/page";
+'use client'
+import Header from '@/components/Header/page';
 
-export default function Home() {
+export default function MyApp() {
   return (
     <>
-    <Sidebar/>
-     <div className="transition-all duration-300 ml-[270px] h-dvh" id="content">
-    <Header/>
-    </div>
-    
+      <div className="transition-all duration-300 ml-[270px] h-dvh" id="content">
+        <Header />
+      </div>
     </>
   );
 }

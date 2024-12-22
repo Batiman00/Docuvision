@@ -7,11 +7,8 @@ const ps2 = Press_Start_2P({
   subsets: ['latin'],
 })
  
-
-
 export default function Header() {
   const { data: session } = useSession();
-  console.log("Session Data:", session);
     return (
         <header className={`${ps2.className} pr-4 py-2 w-full text-white text-xs flex md:flex md:flex-grow space bg-stone-900 justify-between h-[10%]`}> 
         <div className='mx-4 grid grid-rows-2 items-center justify-items-start'>

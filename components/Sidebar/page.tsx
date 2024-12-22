@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { getSession } from 'next-auth/react';
 
 export function Sidebar() {
@@ -16,7 +16,8 @@ export function Sidebar() {
     const fetchChats = async () => {
       try {
         const session = await getSession();
-        if (session?.user?.id) {
+        console.log(session)
+        if (session) {
           const token = session?.access_token;
           const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/chat/user-chats`,
@@ -64,7 +65,6 @@ export function Sidebar() {
       )}
     >
       <div className="h-full px-3 py-4 flex flex-col justify-between">
-        {/* Chats Section */}
         <div className="flex flex-col max-h-[75%]">
           <h2 className="text-white text-lg font-bold mb-4">Save Points</h2>
           <div className="flex-grow overflow-y-auto flex flex-col gap-1 w-full">

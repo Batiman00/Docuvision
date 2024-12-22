@@ -35,7 +35,7 @@ export default function ChatLayout() {
     setIsLoading(true);
     try {
       const session = await getSession();
-      if (session?.user?.id && chatId) {
+      if (session && chatId) {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat/messages?chatId=${chatId}`,
           {
@@ -67,7 +67,6 @@ export default function ChatLayout() {
   };
   return (
     <>
-      <Sidebar />
       <Chat messages={messages} isLoading={isLoading} setMessages={setMessages} setIsLoading={setIsLoading} chatId={chatID} fetchMessages={fetchMessages} />
     </>
   );
