@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar/page';
 import Chat from '@/components/Chat/Page';
 import { getSession } from 'next-auth/react';
 
