@@ -46,7 +46,7 @@ export default function SignIn() {
     if (res?.error) {
       form.setError("email", { message: "Email ou senha inválidos" });
     } else if (res?.ok) {
-      router.push(res.url || "/");
+      router.push(`${res.url}/chat` || "/chat");
     }
   };
 
@@ -102,7 +102,7 @@ export default function SignIn() {
           </Button>
         </form>
         <p className="mt-4 text-xs text-center">
-          Don't have an account?{" "}
+          Don&#39;t have an account?{" "}
           <a href="register" className="text-amber-400 underline">
             Sign Up
           </a>

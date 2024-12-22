@@ -1,16 +1,13 @@
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Dispatch, SetStateAction } from 'react';
-  import { Button } from "@/components/ui/button"
   
   export function AlertErrorMessage(
     { message, open, displayFunction } :

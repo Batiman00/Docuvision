@@ -10,25 +10,25 @@ const authOptions: NextAuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        try{
-        if (!credentials) {
-          return null;
-        }
-        
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+        try {
+          if (!credentials) {
+            return null;
+          }
+
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
             method: 'POST',
             body: JSON.stringify(credentials),
             headers: { 'Content-Type': 'application/json' }
           });
           const user = await res.json();
           if (res.ok && user.access_token) {
-            return user; 
+            return user;
           }
-          return null; 
-      }catch(error){
+          return null;
+        } catch (error) {
           console.log(error)
+        }
       }
-    }
     }),
   ],
   pages: {
@@ -42,26 +42,25 @@ const authOptions: NextAuthOptions = {
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async jwt({ token, user }) {
-      
-      if (user) {
-        const decoded = jwt.decode(user.access_token) as { email: string, name: string, sub: string };
+      if (user && user.access_token) {
+        const decoded = jwt.decode(user.access_token) as unknown as { email: string, name: string, sub: string };
         token.accessToken = user.access_token;
-        token.email = decoded.email
-        token.name = decoded.name
+        token.email = decoded.email;
+        token.name = decoded.name;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.access_token = token.accessToken as string; 
+        session.access_token = token.accessToken as string;
         session.user = {
-          id: token.id as string,
+          id: token.userId as string,
           email: token.email as string,
           name: token.name as string,
         };
       };
       return session
-  },
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
