@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Image as ImageIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { AlertErrorMessage } from '../AlertErrorMessage/page';
+import jsPDF from 'jspdf';
 
 interface Message {
   id: number;
@@ -38,6 +39,39 @@ export default function Chat({
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [progress, setProgress] = useState(0);
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    const margin = 10; // Margin from left and right
+    const pageWidth = doc.internal.pageSize.width - margin; // Width available for text
+    const lineHeight = 8; // Line height
+    let yPosition = 10; // Starting Y position for text
+  
+    doc.setFontSize(9);
+    messages.forEach((message) => {
+      const text = `${message.type === 'bot' ? 'Bot' : 'User'}: ${message.text}`;
+      const textLines = doc.splitTextToSize(text, pageWidth);
+
+      textLines.forEach((line : any) => {
+        if (yPosition > doc.internal.pageSize.height - margin) {
+          doc.addPage();
+          yPosition = margin;
+        }
+        if (message.type === 'user') {
+          doc.setFont('helvetica', 'bold');
+        } else {
+          doc.setFont('helvetica', 'normal');
+        }
+        doc.text(line, margin, yPosition); 
+        yPosition += lineHeight; 
+      });
+      yPosition += lineHeight / 2;
+    });
+  
+    doc.save('chat-messages.pdf');
+  };
+  
+  
 
   const handleSubmit = async () => {
     const session = await getSession();
@@ -74,8 +108,8 @@ export default function Chat({
         setShowErrorAlert(true);
       } else {
         await fetchMessages(response?.data?.chat?.id);
-        if(response?.data?.chat?.id){
-          setChatId(response.data.chat.id)
+        if (response?.data?.chat?.id) {
+          setChatId(response.data.chat.id);
         }
       }
     } catch (error) {
@@ -100,12 +134,12 @@ export default function Chat({
         <CardTitle>Chat </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-[85%]">
-        <ScrollArea className="flex-grow border rounded p-2 mb-2 overflow-y-auto bg-gray-50">
+        <ScrollArea className="flex-grow border rounded p-2 mb-2 overflow-y-auto">
           {messages.map((message) => (
             <div
               key={message.id}
               className={`mb-2 p-2 rounded ${
-                message.type === 'bot' ? 'bg-blue-100 text-blue-900' : 'bg-green-100 text-green-900'
+                message.type === 'bot' ? 'bg-amber-200 text-stone-900' : 'bg-stone-900 text-gray-100'
               }`}
             >
               {message.text}
@@ -157,7 +191,9 @@ export default function Chat({
           />
         </div>
       </CardContent>
-      <CardFooter className="h-[5%]">Download Content</CardFooter>
+      <CardFooter className="h-[5%]">
+        <Button onClick={handleDownloadPDF}>Download Content</Button>
+      </CardFooter>
     </Card>
   );
 }
