@@ -90,14 +90,14 @@ export default function Chat({
   };
 
   return (
-    <Card className="w-full shadow-md h-[90%]">
+    <Card className="w-full h-[90%] bg-stone-100">
       <AlertErrorMessage
         message={errorMessage}
         open={showErrorAlert}
         displayFunction={setShowErrorAlert}
       />
       <CardHeader className="h-[10%]">
-        <CardTitle>Chat</CardTitle>
+        <CardTitle>Chat </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-[85%]">
         <ScrollArea className="flex-grow border rounded p-2 mb-2 overflow-y-auto bg-gray-50">
@@ -135,7 +135,7 @@ export default function Chat({
             placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-grow"
+            className="flex-grow bg-stone-200"
           />
           <Button onClick={handleSubmit} className="flex items-center gap-1">
             <Send size={16} /> Send
