@@ -22,6 +22,7 @@ interface ChatProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   chatId: string;
   fetchMessages: (chatId: string) => Promise<void>;
+  setChatId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Chat({
@@ -29,7 +30,8 @@ export default function Chat({
   isLoading,
   setIsLoading,
   chatId,
-  fetchMessages
+  fetchMessages,
+  setChatId
 }: ChatProps) {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<File | null>(null);
@@ -72,6 +74,9 @@ export default function Chat({
         setShowErrorAlert(true);
       } else {
         await fetchMessages(response?.data?.chat?.id);
+        if(response?.data?.chat?.id){
+          setChatId(response.data.chat.id)
+        }
       }
     } catch (error) {
       console.error('Error processing file:', error);

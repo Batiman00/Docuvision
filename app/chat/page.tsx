@@ -66,7 +66,7 @@ export default function ChatLayout() {
   };
   return (
     <>
-      <Chat messages={messages} isLoading={isLoading} setMessages={setMessages} setIsLoading={setIsLoading} chatId={chatID} fetchMessages={fetchMessages} />
+      <Chat messages={messages} isLoading={isLoading} setMessages={setMessages} setIsLoading={setIsLoading} chatId={chatID} fetchMessages={fetchMessages} setChatId={setChatID}/>
     </>
   );
 }
