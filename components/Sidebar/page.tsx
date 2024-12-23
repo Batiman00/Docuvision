@@ -65,20 +65,20 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 border-r bg-stone-400 transition-all duration-500',
+        'fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500',
         isCollapsed ? 'w-16' : 'w-[270px]',
         'h-full'
       )}
     >
       <div className="h-full px-3 py-4 flex flex-col justify-between">
         <div className="flex flex-col max-h-[75%]">
-          <h2 className={`${ps2.className} text-black text-xs font-bold mb-4 self-center`}>Save Points</h2>
+          <h2 className={`${ps2.className} text-amber-300 text-xs font-bold mb-4 self-center`}>Save Points</h2>
           <div className="flex-grow overflow-y-auto flex flex-col gap-3 w-full">
             {chats.map((chat) => (
               <button
                 key={chat.chatId}
                 onClick={() => handleChatClick(chat.chatId)}
-                className={`text-black hover:text-amber-600 text-left text-xs outline outline-offset-5 outline-1 ${ps2.className}`}
+                className={`text-stone-100 hover:text-amber-600 text-left text-xs outline outline-offset-5 outline-1 ${ps2.className}`}
               >
                 {chat.title}
               </button>
