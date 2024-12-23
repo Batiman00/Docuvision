@@ -52,7 +52,7 @@ export default function Chat({
       const text = `${message.type === 'bot' ? 'Bot' : 'User'}: ${message.text}`;
       const textLines = doc.splitTextToSize(text, pageWidth);
 
-      textLines.forEach((line : any) => {
+      textLines.forEach((line : string) => {
         if (yPosition > doc.internal.pageSize.height - margin) {
           doc.addPage();
           yPosition = margin;
