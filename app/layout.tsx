@@ -2,6 +2,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { UserContextProvider } from "@/contexts/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,12 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">     
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen bg-stone-300`}
       >
         <SessionProvider>
-        {children}
+          <UserContextProvider>
+            {children}
+          </UserContextProvider>
         </SessionProvider>
       </body>
     </html>

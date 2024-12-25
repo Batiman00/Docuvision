@@ -8,37 +8,26 @@ import { Send, Image as ImageIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { AlertErrorMessage } from '../AlertErrorMessage/page';
 import jsPDF from 'jspdf';
-
-interface Message {
-  id: number;
-  text: string;
-  type: 'bot' | 'user';
-  image?: string | null;
-}
+import { useUserContext } from '@/contexts/UserContext';
+import Markdown from 'markdown-to-jsx';
+import { fetchChats, getMessages } from '@/services/chatService';
 
 interface ChatProps {
-  messages: Message[];
   isLoading: boolean;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  chatId: string;
-  fetchMessages: (chatId: string) => Promise<void>;
-  setChatId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Chat({
-  messages,
   isLoading,
   setIsLoading,
-  chatId,
-  fetchMessages,
-  setChatId
 }: ChatProps) {
   const [input, setInput] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [progress, setProgress] = useState(0);
+  const { chat, setChat, setChats } = useUserContext()
+
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
@@ -46,13 +35,13 @@ export default function Chat({
     const pageWidth = doc.internal.pageSize.width - margin; // Width available for text
     const lineHeight = 8; // Line height
     let yPosition = 10; // Starting Y position for text
-  
+
     doc.setFontSize(9);
-    messages.forEach((message) => {
+    chat.messages.forEach((message) => {
       const text = `${message.type === 'bot' ? 'Bot' : 'User'}: ${message.text}`;
       const textLines = doc.splitTextToSize(text, pageWidth);
 
-      textLines.forEach((line : string) => {
+      textLines.forEach((line: string) => {
         if (yPosition > doc.internal.pageSize.height - margin) {
           doc.addPage();
           yPosition = margin;
@@ -62,16 +51,16 @@ export default function Chat({
         } else {
           doc.setFont('helvetica', 'normal');
         }
-        doc.text(line, margin, yPosition); 
-        yPosition += lineHeight; 
+        doc.text(line, margin, yPosition);
+        yPosition += lineHeight;
       });
       yPosition += lineHeight / 2;
     });
-  
+
     doc.save('chat-messages.pdf');
   };
-  
-  
+
+
 
   const handleSubmit = async () => {
     const session = await getSession();
@@ -91,7 +80,7 @@ export default function Chat({
       if (image) {
         formData.append('file', image);
       }
-      formData.append('chatId', chatId === null ? '' : chatId);
+      formData.append('chatId', chat.id);
       formData.append('prompt', input === null ? '' : input);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/ocr`, {
@@ -107,19 +96,23 @@ export default function Chat({
         setErrorMessage(response.message || 'Error processing image');
         setShowErrorAlert(true);
       } else {
-        await fetchMessages(response?.data?.chat?.id);
-        if (response?.data?.chat?.id) {
-          setChatId(response.data.chat.id);
+        if(response?.data?.chat?.id){
+        const chatInfo = await getMessages(response.data.chat.id)
+        if(!chat.id){ 
+          const chatList = await fetchChats()
+          setChats(chatList)
+        }
+        setChat(chatInfo.chat)
         }
       }
     } catch (error) {
       console.error('Error processing file:', error);
-      setErrorMessage('Something went wrong!');
+      setErrorMessage('Something went wrong!' + String(error));
       setShowErrorAlert(true);
     } finally {
       setIsLoading(false);
       setInput('');
-      setImage(null); // Clear the image after submission
+      setImage(null);
     }
   };
 
@@ -131,21 +124,17 @@ export default function Chat({
         displayFunction={setShowErrorAlert}
       />
       <CardHeader className="h-[10%]">
-        <CardTitle>Chat </CardTitle>
+        <CardTitle>Chat {chat.title} </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col h-[85%]">
         <ScrollArea className="flex-grow border rounded p-2 mb-2 overflow-y-auto">
-          {messages.map((message) => (
+          {chat.messages.map((message) => (
             <div
               key={message.id}
-              className={`mb-2 p-2 rounded ${
-                message.type === 'bot' ? 'bg-amber-200 text-stone-900' : 'bg-stone-900 text-gray-100'
-              }`}
+              className={`mb-2 p-2 rounded ${message.type === 'bot' ? 'bg-amber-200 text-stone-900' : 'bg-stone-900 text-gray-100'
+                }`}
             >
-              {message.text}
-              {message.image && (
-                <img src={message.image} alt="Uploaded" className="mt-2 w-full h-auto rounded" />
-              )}
+             <Markdown>{message.text}</Markdown>
             </div>
           ))}
         </ScrollArea>

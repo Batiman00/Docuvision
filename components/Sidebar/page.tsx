@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { signOut } from 'next-auth/react';
-import { getSession } from 'next-auth/react';
 import { Press_Start_2P } from "next/font/google";
+import { useUserContext } from '@/contexts/UserContext';
+import { fetchChats } from '@/services/chatService';
+
 
 const ps2 = Press_Start_2P({
   weight: "400",
@@ -16,35 +18,22 @@ const ps2 = Press_Start_2P({
 export function Sidebar() {
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [chats, setChats] = useState<{ chatId: string; title: string }[]>([]);
+  const { chats, setChats } = useUserContext();
 
+  
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const session = await getSession();
-        console.log(session)
-        if (session) {
-          const token = session?.access_token;
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/chat/user-chats`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const data = await response.json();
-          if (data?.data) {
-            setChats(data.data);
-          }
+    const loadChats = async () => {
+        try {
+            const fetchedChats = await fetchChats();
+            setChats(fetchedChats);
+        } catch (error) {
+            console.error(error);
         }
-      } catch (error) {
-        console.error('Error fetching chats:', error);
-      }
     };
 
-    fetchChats();
-  }, []);
+    loadChats();
+}, []);
+
 
   const handleChatClick = async (chatId: string) => {
     try {
@@ -76,8 +65,8 @@ export function Sidebar() {
           <div className="flex-grow overflow-y-auto flex flex-col gap-3 w-full">
             {chats.map((chat) => (
               <button
-                key={chat.chatId}
-                onClick={() => handleChatClick(chat.chatId)}
+                key={chat.id}
+                onClick={() => handleChatClick(chat.id)}
                 className={`text-stone-100 hover:text-amber-600 text-left text-xs outline outline-offset-5 outline-1 ${ps2.className}`}
               >
                 {chat.title}
