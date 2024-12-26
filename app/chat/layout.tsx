@@ -10,7 +10,7 @@ export default function ChatLayout({
   return (
     <Suspense>
       <Sidebar />
-      <div className="transition-all duration-300 ml-[270px] h-dvh" id="content">
+      <div className="transition-all duration-300 sm:ml-[270px] ml-[2rem] h-dvh" id="content">
         <Header />
         {children}
       </div>
