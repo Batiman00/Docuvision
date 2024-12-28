@@ -45,12 +45,7 @@ export function Sidebar() {
 
   return (
     <div>
-      <button
-        className={`fixed top-1 left-1 z-50 p-3 bg-amber-300 text-black rounded-full shadow-lg block ${menuChatShow ? 'hidden' : 'block'}`}
-        onClick={() => { setMenuChatShow(!menuChatShow) }}
-      >
-        {menuChatShow ? "X" : "☰"}
-      </button>
+      
       <aside
         className={`w-[270px] h-full fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500 ${menuChatShow ? 'translate-x-0' : '-translate-x-full'}`}
       >
