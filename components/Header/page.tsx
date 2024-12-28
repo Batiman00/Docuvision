@@ -15,10 +15,11 @@ export default function Header() {
     >
       <div className="mx-4 mt-1 text-right col-start-4 justify-start">
         <h1 className="text-lg font-semibold text-amber-300">Docuvision</h1>
-        <div className='flex flex-row items-baseline'>
-          <h3 className="text-sm font-semibold text-amber-300">Player: </h3>
-          <p className="text-xs">{session ? `${session?.user?.name}` : 'Guest'}</p>
-        </div>
+        {session &&
+          <div className='flex flex-row items-baseline'>
+            <h3 className="text-sm font-semibold text-amber-300">Player: </h3>
+          </div>
+        }
       </div>
     </header>
 

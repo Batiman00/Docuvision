@@ -51,16 +51,8 @@ export function Sidebar() {
       >
         {menuChatShow ? "X" : "☰"}
       </button>
-      {/* <aside
-        className={cn(
-          'fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500',
-          isCollapsed ? '' : '!translate-x-0',
-          'h-full sm:translate-x-0 -translate-x-full'
-        )}
-      >
-     */}
       <aside
-        className={`h-full fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500 ${menuChatShow ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`w-[270px] h-full fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500 ${menuChatShow ? 'translate-x-0' : '-translate-x-full'}`}
       >
 
         <div className="h-full px-3 py-4 flex flex-col justify-between">
