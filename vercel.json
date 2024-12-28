@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/_not-found",
+        "destination": "/"
+      }
+    ]
+  }
+  
