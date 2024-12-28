@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
 import { signOut } from 'next-auth/react';
 import { Press_Start_2P } from "next/font/google";
 import { useUserContext } from '@/contexts/UserContext';
@@ -17,8 +16,7 @@ const ps2 = Press_Start_2P({
 
 export function Sidebar() {
   const router = useRouter();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const { chats, setChats } = useUserContext();
+  const { chats, setChats, setMenuChatShow, menuChatShow } = useUserContext();
 
 
   useEffect(() => {
@@ -43,29 +41,31 @@ export function Sidebar() {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsCollapsed((prevState) => !prevState);
-  };
+
 
   return (
     <div>
-      <aside
+      <button
+        className={`fixed top-1 left-1 z-50 p-3 bg-amber-300 text-black rounded-full shadow-lg block ${menuChatShow ? 'hidden' : 'block'}`}
+        onClick={() => { setMenuChatShow(!menuChatShow) }}
+      >
+        {menuChatShow ? "X" : "☰"}
+      </button>
+      {/* <aside
         className={cn(
           'fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500',
           isCollapsed ? '' : '!translate-x-0',
-          'h-full sm:translate-x-0 -translate-x-[85%]'
+          'h-full sm:translate-x-0 -translate-x-full'
         )}
+      >
+     */}
+      <aside
+        className={`h-full fixed left-0 top-0 z-40 border-r bg-black transition-all duration-500 ${menuChatShow ? 'translate-x-0' : '-translate-x-full'}`}
       >
 
         <div className="h-full px-3 py-4 flex flex-col justify-between">
-          <div className="flex flex-col max-h-[75%] ">
-            <h2 className={`${ps2.className} text-amber-300 text-xs font-bold mb-4 self-center`}>Save Points</h2>
-            <button
-              className="fixed top-1/2 right-0 z-50 p-3 bg-amber-300 text-black rounded-full shadow-lg block sm:hidden"
-              onClick={toggleSidebar}
-            >
-              {isCollapsed ? ">>" : "<<"}
-            </button>
+          <div className="flex flex-col max-h-[75%]">
+            <h2 className={`${ps2.className} text-amber-300 text-xs font-bold mb-4 self-center mt-2`}>Save Points</h2>
 
             <div className="flex-grow overflow-y-auto flex flex-col gap-3 w-full">
               {chats.map((chat) => (
@@ -82,7 +82,7 @@ export function Sidebar() {
           </div>
 
 
-          <div className="mt-4 h-[35%] hidden sm:block">
+          <div className="mt-4 h-[35%]">
             <div className="flex flex-col gap-2">
               <Button
                 className="w-full"
@@ -104,9 +104,9 @@ export function Sidebar() {
               <Button
                 variant="secondary"
                 className="w-full"
-                onClick={toggleSidebar}
+                onClick={() => { setMenuChatShow(!menuChatShow) }}
               >
-                {isCollapsed ? 'Expand' : 'Collapse'}
+                {menuChatShow ?  'Collapse':'Expand' }
               </Button>
             </div>
           </div>

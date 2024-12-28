@@ -2,33 +2,27 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Chat, Message } from "@/types"
-import { getSession } from 'next-auth/react';
 
 interface UserContextType {
     chats: Chat[];
     setChats: (chats: Chat[]) => void;
     chat: Chat;
     setChat: (chat: Chat) => void;
-}
-interface ApiMessaageResponse {
-    messages: ApiMessage[],
-    chatTitle: string,
-}
-
-interface ApiMessage {
-    content: string;
-    senderType: 'bot' | 'user';
+    menuChatShow: boolean;
+    setMenuChatShow : (value: boolean) => void;
 }
 
 
 const UserContext = createContext<UserContextType>({
     chats: [], setChats: () => { },
     chat: { id: '', messages: [], title: '' }, setChat: () => { },
+    menuChatShow : true, setMenuChatShow :  () => { }
 });
 
 export function UserContextProvider({ children }: Readonly<{ children: React.ReactNode }>) {
     const [chats, setChats] = useState<Chat[]>([]);
     const [chat, setChat] = useState<Chat>({ id: '', messages: [], title: '' })
+    const [menuChatShow, setMenuChatShow] = useState(true)
 
     {/*useEffect(() => { fetchChats() }, [])
 
@@ -87,7 +81,7 @@ export function UserContextProvider({ children }: Readonly<{ children: React.Rea
     }*/}
 
     return (
-        <UserContext.Provider value={{ chats, setChats, chat, setChat }}>
+        <UserContext.Provider value={{ chats, setChats, chat, setChat, menuChatShow, setMenuChatShow }}>
             {children}
         </UserContext.Provider>
     );

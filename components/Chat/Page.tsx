@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Image as ImageIcon } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
@@ -96,13 +96,13 @@ export default function Chat({
         setErrorMessage(response.message || 'Error processing image');
         setShowErrorAlert(true);
       } else {
-        if(response?.data?.chat?.id){
-        const chatInfo = await getMessages(response.data.chat.id)
-        if(!chat.id){ 
-          const chatList = await fetchChats()
-          setChats(chatList)
-        }
-        setChat(chatInfo.chat)
+        if (response?.data?.chat?.id) {
+          const chatInfo = await getMessages(response.data.chat.id)
+          if (!chat.id) {
+            const chatList = await fetchChats()
+            setChats(chatList)
+          }
+          setChat(chatInfo.chat)
         }
       }
     } catch (error) {
@@ -117,7 +117,7 @@ export default function Chat({
   };
 
   return (
-    <Card className="w-full h-[90%] bg-stone-100">
+    <Card className="w-full h-full sm:h-[90%]  bg-stone-100 min-w-[320px]">
       <AlertErrorMessage
         message={errorMessage}
         open={showErrorAlert}
@@ -134,7 +134,7 @@ export default function Chat({
               className={`mb-2 p-2 rounded ${message.type === 'bot' ? 'bg-amber-200 text-stone-900' : 'bg-stone-900 text-gray-100'
                 }`}
             >
-             <Markdown>{message.text}</Markdown>
+              <Markdown>{message.text}</Markdown>
             </div>
           ))}
         </ScrollArea>
@@ -153,36 +153,39 @@ export default function Chat({
           </div>
         )}
         <Progress value={progress} className={isLoading ? '' : 'hidden'} />
-        <div className="flex items-center gap-2">
+        <div className=" flex flex-col sm:flex-row">
           <Textarea
             placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="flex-grow bg-stone-200"
           />
-          <Button onClick={handleSubmit} className="flex items-center gap-1">
-            <Send size={16} /> Send
-          </Button>
-          <Button
-            className="flex items-center gap-1"
-            onClick={() => document.getElementById('file-upload')?.click()}
-          >
-            <ImageIcon size={16} /> Upload File
-          </Button>
-          <input
-            id="file-upload"
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              setImage(e.target.files?.[0] || null);
-            }}
-            style={{ display: 'none' }}
-          />
+          <div className='flex flex-col m-2 gap-2 '>
+            <div className='flex flex-row gap-3 '>
+              <Button onClick={handleSubmit} className="flex items-center gap-1 grow">
+                <Send size={16} /> Send
+              </Button>
+
+              <Button
+                className="flex items-center gap-1"
+                onClick={() => document.getElementById('file-upload')?.click()}
+              >
+                <ImageIcon size={16} /> Upload File
+              </Button>
+              <input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  setImage(e.target.files?.[0] || null);
+                }}
+                style={{ display: 'none' }}
+              />
+            </div>
+            <Button onClick={handleDownloadPDF} className=''>Download Content</Button>
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="h-[5%]">
-        <Button onClick={handleDownloadPDF}>Download Content</Button>
-      </CardFooter>
     </Card>
   );
 }
