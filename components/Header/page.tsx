@@ -18,6 +18,7 @@ export default function Header() {
         {session &&
           <div className='flex flex-row items-baseline'>
             <h3 className="text-sm font-semibold text-amber-300">Player: </h3>
+            <p className="text-xs">{session.user?.name}</p>
           </div>
         }
       </div>
